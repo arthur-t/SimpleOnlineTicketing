@@ -24,6 +24,7 @@ public class EventBean {
     private EntityManager entityManager; 
     
     public void addEvent(Event event){
+        //Session session=(entityManager.getDelegate()).getSession();
         entityManager.persist(event);
     }
     
