@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <meta charset="utf-8" />
+        <title>Profile</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
+
+    </h:head>
+    
+    <h:body>
+        <h1>Profile</h1>
+        <h:commandButton value="Déconnexion" action="#{userSessionBean.logout()}" class="btn btn-danger" />
+        <h:messages globalOnly="true" infoClass="info" />
+        <br />
+        <div class="jumbotron">
+            <h2>Mes réservations</h2>
+            <ul>
+                <ui:repeat value="#{user.events}" var="event">
+                    <li>
+                        <h:outputText value="#{event.title}"></h:outputText>
+                    </li>
+                </ui:repeat>
+            </ul>
+  
+        </div>
+    </h:body>
+</html>

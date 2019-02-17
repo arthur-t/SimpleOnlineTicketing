@@ -5,6 +5,7 @@
  */
 package business;
 
+import entity.AppUser;
 import entity.Event;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -18,7 +19,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @LocalBean
-public class EventBean {
+public class EventBean{
 
     @PersistenceContext(unitName="OnlineTicketingPersistenceUnit")
     private EntityManager entityManager; 
@@ -28,11 +29,27 @@ public class EventBean {
         entityManager.persist(event);
     }
     
-    public List<Event> getEvents() {
-        return entityManager.createQuery("From Events").getResultList();
-    }
+    public List<Event> getEvents() throws IndexOutOfBoundsException{
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+        List<Event> events = (List<Event>)entityManager.createQuery("from Event").getResultList();
+        
+        return events;
+    }
     
+    public Event getEventById(long id) throws IndexOutOfBoundsException{
+        Event event = (Event)entityManager.createQuery("SELECT e FROM Event e WHERE id = :id")
+                .setParameter("id", id)
+                .getResultList()
+                .get(0);
+        
+        return event;
+    }
+    
+    public void addUser(AppUser user, long id) throws IndexOutOfBoundsException{
+        Event event = this.getEventById(id);
+        
+        event.addUser(user);
+        entityManager.merge(event);
+        
+    }
 }

@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,6 +33,9 @@ public class Event implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Column(name="TITLE")
+    private String title;
+    
     @Column(name="DESCRIPTION")
     private String description;
     
@@ -44,10 +49,14 @@ public class Event implements Serializable {
     @Column(name="PRICE")
     private long price;
     
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events", cascade = CascadeType.ALL)
     private List<AppUser> users = new ArrayList<>();
 
-    public Event(String description, String location, Date happeningDate, long price) {
+    public Event() {
+    }
+
+    public Event(String title, String description, String location, Date happeningDate, long price) {
+        this.title = title;
         this.description = description;
         this.location = location;
         this.happeningDate = happeningDate;
@@ -64,6 +73,14 @@ public class Event implements Serializable {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
     public String getDescription() {
         return description;
     }
@@ -97,11 +114,11 @@ public class Event implements Serializable {
     }
 
     public List<AppUser> getUsers() {
-        return Collections.unmodifiableList(users);
+        return users;
     }
 
-    public void setUsers(List<AppUser> users) {
-        this.users = users;
+    public void addUser(AppUser user) {
+        this.users.add(user);
     }
     
     

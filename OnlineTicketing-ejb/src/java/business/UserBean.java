@@ -5,17 +5,52 @@
  */
 package business;
 
+import entity.AppUser;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
+import javax.naming.AuthenticationException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author artronche
  */
-@Stateless
+@Stateful
 @LocalBean
 public class UserBean {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext(unitName="OnlineTicketingPersistenceUnit")
+    private EntityManager entityManager; 
+    
+    public void addUser(AppUser user){
+        entityManager.persist(user);
+    }
+    
+    public AppUser logUser(String username, String hash) throws AuthenticationException, IndexOutOfBoundsException{
+        
+        AppUser user = (AppUser)entityManager.createQuery("SELECT u FROM AppUser u WHERE username = :username")
+                .setParameter("username", username)
+                .getResultList()
+                .get(0);
+        
+        if (user.getPassword().equals(hash)){
+            return user;
+        }
+        else{
+            throw new AuthenticationException();
+        }
+    }
+    
+    public AppUser getUserByName(String username) throws IndexOutOfBoundsException{
+        AppUser user = (AppUser)entityManager.createQuery("SELECT u FROM AppUser u WHERE username = :username")
+                .setParameter("username", username)
+                .getResultList()
+                .get(0);
+        return user;
+    }
+    
+    
 }

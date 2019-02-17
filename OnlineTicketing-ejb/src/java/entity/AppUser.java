@@ -13,6 +13,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,13 +39,10 @@ public class AppUser implements Serializable {
     @Column(name="PASSWORD")
     private String password;
     
-    @Column(name="INFORMATIONS")
+    @Column(name="INFORMATIONS", nullable=true)
     private String informations;
     
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "ticket",
         joinColumns = @JoinColumn(name = "event_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
@@ -84,7 +82,7 @@ public class AppUser implements Serializable {
     }
 
     public List<Event> getEvents() {
-        return Collections.unmodifiableList(events);
+        return events;
     }
 
     public void setEvents(List<Event> events) {
